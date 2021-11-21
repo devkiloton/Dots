@@ -38,12 +38,13 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Gameplay\CameraManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\PathDrawner.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Ray.cs" />
      <Compile Include="Assets\Scripts\Gameplay\CollisionDetector.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\FollowCursor.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Grid.cs" />
      <Compile Include="Assets\Scripts\UI\LoadScene.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\FollowCursor.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Ray.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\PathDrawner.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\PathInstantiater.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Fonts\MontSerrat\OFL.txt" />

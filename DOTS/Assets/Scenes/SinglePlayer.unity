@@ -344,6 +344,7 @@ MonoBehaviour:
   LevelManagerScript: {fileID: 295360448}
   SetGridOrigin: {x: 0, y: 0}
   Dot: {fileID: 4172427176709452162, guid: ac054c4cf54d76b4db8c4e312a3df406, type: 3}
+  PathInstantiaterScript: {fileID: 8760618550251853991, guid: 46857aea8710b364ea9d52a7abacf395, type: 3}
   Path: {fileID: 1190320724}
 --- !u!4 &423897919
 Transform:

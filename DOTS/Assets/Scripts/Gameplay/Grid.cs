@@ -22,6 +22,8 @@ public class Grid : MonoBehaviour
     public HashSet<Vector2> positionsLines = new HashSet<Vector2>();
     private Vector2[] positionsLinesArray;
 
+    public GameObject PathInstantiaterScript;
+
     public PathDrawner Path;
 
     private int level;
@@ -98,12 +100,34 @@ public class Grid : MonoBehaviour
                 positionsLines.Add(vector);
                 positionsLinesArray = new Vector2[level];
                 positionsLines.CopyTo(positionsLinesArray);
+
+
+                Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                transform.position = position;
+                Path.PathMaker(positionsLinesArray[i], position);
+
+                //Debug.Log($"{i} {positionsLinesArray[i]}");
             }
 
-            if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i] && clickedDots.Count > 1 && i+1 < level)
-            {
+            
+        }
+    }
 
-                Path.PathMaker(positionsLinesArray[i], positionsLinesArray[i+1]);
+    void LateUpdate()
+    {
+        for(int i=0; i<level; i++)
+        {
+        if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i] && clickedDots.Count > 1 && i+1 < level && clickedDotsArray[i+1]!=null)
+            {
+                //Debug.Log($"PositionLinesArray i{i}: {positionsLinesArray[i]}, i{i+1}: {positionsLinesArray[i+1]}");
+                if (GameObject.Find($"Line{positionsLinesArray[i]} to {positionsLinesArray[i+1]}") == null)
+                {
+                    var pathInstantiaterInstance = Instantiate(PathInstantiaterScript, new Vector2(0,0), Quaternion.identity);
+                    pathInstantiaterInstance.name = $"Line{positionsLinesArray[i]} to {positionsLinesArray[i+1]}";
+                    var script = pathInstantiaterInstance.GetComponent<PathInstantiater>();//.PathInstantiaterFunction(positionsLinesArray[i], positionsLinesArray[i+1]);
+                    script.Beginning = positionsLinesArray[i];
+                    script.End = positionsLinesArray[i+1];
+                }
             }
         }
     }

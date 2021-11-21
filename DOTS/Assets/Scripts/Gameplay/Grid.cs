@@ -15,8 +15,14 @@ public class Grid : MonoBehaviour
     private float yDistanceBetweenDots;
 
     private int[,] givenDots = new int[10, 10];
-    private List<string> Dots = new List<string>();
-    //You need to associate this array to the collisions
+    private List<string> listGivenDots = new List<string>();
+    public HashSet<string> clickedDots = new HashSet<string>();
+    private string[] clickedDotsArray;
+    private string[] dotsArray;
+    public HashSet<Vector2> positionsLines = new HashSet<Vector2>();
+    private Vector2[] positionsLinesArray;
+
+    public PathDrawner Path;
 
     private int level;
     private int matriceLine = 0;
@@ -36,14 +42,11 @@ public class Grid : MonoBehaviour
         {
             line = ListRandomizer();
             column = ListRandomizer();
-            //Debug.Log(line);
-            //Debug.Log(column);
-            //Debug.Log(givenDots[line, column]);
 
             if (givenDots[line, column] != 1)
             {
                 givenDots[line, column] = 1;
-                Dots.Add($"{line},{column}");
+                listGivenDots.Add($"{line},{column}");
             }
             else
             {
@@ -51,22 +54,21 @@ public class Grid : MonoBehaviour
             }
         }
 
-        string[] dotsArray = Dots.ToArray();
-        for(int x=0;x<Dots.Count;x++)
-        {
-            Debug.Log(dotsArray[x]);
-        }
+        dotsArray = new string[listGivenDots.Count];
+        dotsArray = listGivenDots.ToArray();
 
+        //for(int i = 0; i< clickedDots.Count; i++)
+        //{
+        //    clickedDotsArray[i] = "Empty";
+        //}
 
         for (int i = 1; i < 20; i += 2)
         {
-            //Debug.Log(matriceLine);
             for (int j = 1; j < 20; j += 2)
             {
-                //Debug.Log($"instantiate loop: {matriceLine},{matriceColumn} = {givenDots}");
-                //Debug.Log(givenDots[matriceLine, matriceColumn]);
                 if (givenDots[matriceLine, matriceColumn] == 1)
                 {
+                    Debug.Log($"this givenDotsArray: i0: {matriceLine},{matriceColumn}, i1: {matriceLine}, {matriceColumn}");
                     var instantiatedObject = Instantiate(Dot, new Vector2(xDistanceBetweenDots * i - (float)Screen.width / 2, yDistanceBetweenDots * j - (float)Screen.height * 0.8f / 2), Quaternion.identity);
                     instantiatedObject.name = $"{matriceLine},{matriceColumn}";
                 }
@@ -80,9 +82,33 @@ public class Grid : MonoBehaviour
     {
         level = LevelManagerScript.Level;
 
+        clickedDotsArray = new string[level];
+        clickedDots.CopyTo(clickedDotsArray);
+
+        for(int i=0; i<level; i++)
+        {
+            if(clickedDotsArray[i]!=null && clickedDotsArray[i]!=dotsArray[i])
+            {
+                Debug.Log("wrong way fella");
+            }
+            
+            if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i])
+            {
+                Vector2 vector = GameObject.Find(clickedDotsArray[i]).transform.position;
+                positionsLines.Add(vector);
+                positionsLinesArray = new Vector2[level];
+                positionsLines.CopyTo(positionsLinesArray);
+            }
+
+            if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i] && clickedDots.Count > 1 && i+1 < level)
+            {
+
+                Path.PathMaker(positionsLinesArray[i], positionsLinesArray[i+1]);
+            }
+        }
     }
 
-    public int ListRandomizer()
+    private int ListRandomizer()
     {
         List<int> address;
         var random = new System.Random();

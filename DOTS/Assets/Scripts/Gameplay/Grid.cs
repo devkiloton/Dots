@@ -26,11 +26,18 @@ public class Grid : MonoBehaviour
 
     public PathDrawner Path;
 
+    public Text dotNumberText;
+    private int dotNumber;
+    public Canvas CanvasObject;
+
     private int level;
     private int matriceLine = 0;
     private int matriceColumn = 0;
     private int line = 4;
     private int column = 4;
+
+    //tests
+    public Text m_Text;
 
     void Start()
     {
@@ -40,6 +47,7 @@ public class Grid : MonoBehaviour
 
         level = LevelManagerScript.Level;
 
+        dotsArray = new string[level];
         for (int i = 0; i < level; i++)
         {
             line = ListRandomizer();
@@ -48,7 +56,7 @@ public class Grid : MonoBehaviour
             if (givenDots[line, column] != 1)
             {
                 givenDots[line, column] = 1;
-                listGivenDots.Add($"{line},{column}");
+                dotsArray[i] = $"{line},{column}";
             }
             else
             {
@@ -56,13 +64,7 @@ public class Grid : MonoBehaviour
             }
         }
 
-        dotsArray = new string[listGivenDots.Count];
-        dotsArray = listGivenDots.ToArray();
-
-        //for(int i = 0; i< clickedDots.Count; i++)
-        //{
-        //    clickedDotsArray[i] = "Empty";
-        //}
+        //for()
 
         for (int i = 1; i < 20; i += 2)
         {
@@ -70,7 +72,7 @@ public class Grid : MonoBehaviour
             {
                 if (givenDots[matriceLine, matriceColumn] == 1)
                 {
-                    Debug.Log($"this givenDotsArray: i0: {matriceLine},{matriceColumn}, i1: {matriceLine}, {matriceColumn}");
+                    //Debug.Log($"this givenDotsArray: i0: {matriceLine},{matriceColumn}, i1: {matriceLine}, {matriceColumn}");
                     var instantiatedObject = Instantiate(Dot, new Vector2(xDistanceBetweenDots * i - (float)Screen.width / 2, yDistanceBetweenDots * j - (float)Screen.height * 0.8f / 2), Quaternion.identity);
                     instantiatedObject.name = $"{matriceLine},{matriceColumn}";
                 }
@@ -78,6 +80,15 @@ public class Grid : MonoBehaviour
             }
             matriceLine++;
             matriceColumn = 0;
+        }
+        
+
+        for (int i = 0; i< level; i++)
+        {
+            var instantiatedDotText = Instantiate(dotNumberText, new Vector2(GameObject.Find($"{dotsArray[i]}").transform.position.x + Screen.width/2, GameObject.Find($"{dotsArray[i]}").transform.position.y + Screen.height * 0.8f /2 +Screen.height*0.1f), Quaternion.identity);
+                    instantiatedDotText.name = $"{i+1}";
+                    instantiatedDotText.text = $"{i+1}";
+                    instantiatedDotText.transform.SetParent(CanvasObject.transform);
         }
     }
     void Update()
@@ -91,6 +102,8 @@ public class Grid : MonoBehaviour
         {
             if(clickedDotsArray[i]!=null && clickedDotsArray[i]!=dotsArray[i])
             {
+                //Debug.Log($"dotsArray: {dotsArray[0]}, {dotsArray[1]}, {dotsArray[2]}");
+                //Debug.Log($"dotsArray: {dotsArray[0]}, {dotsArray[1]}, {dotsArray[2]}");
                 Debug.Log("wrong way fella");
             }
             
@@ -101,12 +114,25 @@ public class Grid : MonoBehaviour
                 positionsLinesArray = new Vector2[level];
                 positionsLines.CopyTo(positionsLinesArray);
 
+                if (Input.touchCount == 1)
+                {
+                    Touch touch = Input.GetTouch(0);
 
-                Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    // Update the Text on the screen depending on current position of the touch each frame
+                    m_Text.text = "Touch Position : " + touch.position;
+                    Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(touch.position);
+                    transform.position = position;
+                    Path.PathMaker(positionsLinesArray[i], position);
+                }
+                else
+                {
+                    m_Text.text = "No touch contacts";
+                    Path.PathMaker(positionsLinesArray[i], positionsLinesArray[i] );
+                }
+
+                /*Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 transform.position = position;
-                Path.PathMaker(positionsLinesArray[i], position);
-
-                //Debug.Log($"{i} {positionsLinesArray[i]}");
+                Path.PathMaker(positionsLinesArray[i], position);*/
             }
 
             
@@ -144,7 +170,11 @@ public class Grid : MonoBehaviour
         {
             address = new List<int>{ 2,3,4,5,6,7 };
         }
+
+        int[] randomInt = new int[level];
+        randomInt = address.ToArray(); //.CopyTo(randomInt);
+
         int index = random.Next(address.Count);
-        return address[index];
+        return randomInt[index];
     }
 }

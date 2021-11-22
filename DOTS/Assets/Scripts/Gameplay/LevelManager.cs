@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
     public int Level;
     void Start()
     {
-        Level = 2;
+        Level = 6;
     }
 
     // Update is called once per frame

@@ -8,6 +8,8 @@ public class CollisionDetector : MonoBehaviour
     public GameObject Grid;
     public Grid GridScript;
 
+    public GameObject CanvasObject;
+
     public GameObject Ray;
     public Ray RayOrigin;
     private Transform thisTransform;
@@ -19,6 +21,7 @@ public class CollisionDetector : MonoBehaviour
         Ray = GameObject.Find("Ray");
         RayOrigin = Ray.GetComponent<Ray>();
         thisTransform = GetComponent<Transform>();
+        CanvasObject = GameObject.Find("Canvas");
     }
 
     private void Update()
@@ -31,5 +34,7 @@ public class CollisionDetector : MonoBehaviour
         //Debug.Log($"{this.name}");
         GridScript.clickedDots.Add(this.name);
         RayOrigin.PositionCollision = thisTransform;
+        var CanvasObjectChild = CanvasObject.transform.GetChild(1).gameObject;
+        CanvasObjectChild.SetActive(false);
     }
 }

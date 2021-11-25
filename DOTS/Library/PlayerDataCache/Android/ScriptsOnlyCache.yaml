@@ -14,6 +14,7 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.IK.Editor.dll:
     - UnityEditor.U2D.IK.IKEditorManager
+    - UnityEditor.U2D.IK.IKGizmos
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -22,6 +23,8 @@ ScriptsOnlyBuild:
     - UnityEditor.Tilemaps.SceneViewOpenTilePaletteHelper
     - UnityEditor.Tilemaps.TileDragAndDropManager
     - UnityEditor.Tilemaps.TilemapPrefabStageHelper
+    Unity.Mobile.AndroidLogcat.Editor.dll:
+    - Unity.Android.Logcat.AndroidLogcatManager
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.TextMeshPro.dll:
@@ -62,29 +65,29 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1578}
+      Script: {instanceID: 1576}
     - Class: 114
-      Script: {instanceID: 1906}
+      Script: {instanceID: 1904}
     - Class: 114
-      Script: {instanceID: 2334}
+      Script: {instanceID: 2332}
     - Class: 114
-      Script: {instanceID: 2342}
+      Script: {instanceID: 2340}
     - Class: 114
-      Script: {instanceID: 2782}
+      Script: {instanceID: 2780}
     - Class: 114
-      Script: {instanceID: 2964}
+      Script: {instanceID: 2962}
     - Class: 114
-      Script: {instanceID: 3218}
+      Script: {instanceID: 3216}
     - Class: 114
-      Script: {instanceID: 3480}
+      Script: {instanceID: 3478}
     - Class: 114
-      Script: {instanceID: 3602}
+      Script: {instanceID: 3600}
     - Class: 114
-      Script: {instanceID: 5056}
+      Script: {instanceID: 5054}
     - Class: 114
-      Script: {instanceID: 5474}
+      Script: {instanceID: 5472}
     - Class: 114
-      Script: {instanceID: 5998}
+      Script: {instanceID: 5996}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -123,31 +126,31 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1744}
+      Script: {instanceID: 1742}
     - Class: 114
-      Script: {instanceID: 2342}
+      Script: {instanceID: 2340}
     - Class: 114
-      Script: {instanceID: 2708}
+      Script: {instanceID: 2706}
     - Class: 114
-      Script: {instanceID: 2782}
+      Script: {instanceID: 2780}
     - Class: 114
-      Script: {instanceID: 2800}
+      Script: {instanceID: 2798}
     - Class: 114
-      Script: {instanceID: 2854}
+      Script: {instanceID: 2852}
     - Class: 114
-      Script: {instanceID: 2964}
+      Script: {instanceID: 2962}
     - Class: 114
-      Script: {instanceID: 3218}
+      Script: {instanceID: 3216}
     - Class: 114
-      Script: {instanceID: 3480}
+      Script: {instanceID: 3478}
     - Class: 114
-      Script: {instanceID: 3552}
+      Script: {instanceID: 3550}
     - Class: 114
-      Script: {instanceID: 4054}
+      Script: {instanceID: 4052}
     - Class: 114
-      Script: {instanceID: 5038}
+      Script: {instanceID: 5036}
     - Class: 114
-      Script: {instanceID: 5518}
+      Script: {instanceID: 5516}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -315,7 +318,7 @@ ScriptsOnlyBuild:
     className: CanvasScaler
   - hash:
       serializedVersion: 2
-      Hash: 811a8481ce16fdec9fcc29431eb704db
+      Hash: 8891e18c93c070efa578bbeace430bfa
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LevelManager
@@ -495,7 +498,7 @@ ScriptsOnlyBuild:
     className: PlayerQuitHandler
   - hash:
       serializedVersion: 2
-      Hash: 57a26b94cefa9e6e12bb9092fdf12219
+      Hash: 45b08428abfedc403f5af9166071fe34
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CollisionDetector
@@ -687,7 +690,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAsset
   - hash:
       serializedVersion: 2
-      Hash: a490e1e99a7713b89e2b5fb9cccec46d
+      Hash: d3b08b8b399232abe6bef87eee6c1d20
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Grid
@@ -743,4 +746,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SinglePlayer.unity
-  playerPath: C:/Users/Yarego Brozek/Desktop/Dots5.apk
+  playerPath: C:/Users/Yarego Brozek/Desktop/Dots6.apk

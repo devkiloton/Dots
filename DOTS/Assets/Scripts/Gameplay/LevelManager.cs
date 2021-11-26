@@ -8,10 +8,14 @@ public class LevelManager : MonoBehaviour
     public GameObject GridObject;
     private int levelValidation;
 
+    public bool RestartVariable = false;
+
+    private GameObject instantiatedObject;
+
     public Text LevelText;
     void Awake()
     {
-        Level = 2;
+        Level = 1;
         levelValidation = Level;
     }
 
@@ -22,8 +26,13 @@ public class LevelManager : MonoBehaviour
         if(Level != levelValidation)
         {
             levelValidation = Level;
-            var instantiatedObject = Instantiate(GridObject, new Vector2(1.3f,0), Quaternion.identity);
-            instantiatedObject.name = $"Grid";
+            instantiatedObject = Instantiate(GridObject, new Vector2(1.3f,0), Quaternion.identity);
+            instantiatedObject.name = "Grid";
         }
+    }
+
+    public void Restart()
+    {
+        RestartVariable = true;
     }
 }

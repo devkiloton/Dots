@@ -30,6 +30,8 @@ public class Grid : MonoBehaviour
     private int dotNumber;
     public GameObject CanvasObject;
 
+    private bool lastLine = false;
+
     private int level;
     private int matriceLine = 0;
     private int matriceColumn = 0;
@@ -60,7 +62,7 @@ public class Grid : MonoBehaviour
         {
             line = ListRandomizer();
             column = ListRandomizer();
-
+            Debug.Log($"Creating coordinate: Level{level} Line{line} column{column}");
             if (givenDots[line, column] != 1)
             {
                 givenDots[line, column] = 1;
@@ -83,6 +85,7 @@ public class Grid : MonoBehaviour
             {
                 if (givenDots[matriceLine, matriceColumn] == 1)
                 {
+                    Debug.Log($" instantiate: Level{level} Line{i} column{j}");
                     var instantiatedObject = Instantiate(Dot, new Vector2(xDistanceBetweenDots * i - (float)Screen.width / 2, yDistanceBetweenDots * j - (float)Screen.height * 0.8f / 2), Quaternion.identity);
                     instantiatedObject.name = $"{matriceLine},{matriceColumn}";
                     instantiatedObject.transform.SetParent(GameObject.Find("Dots").transform);
@@ -99,22 +102,24 @@ public class Grid : MonoBehaviour
             var instantiatedDotText = Instantiate(dotNumberText, new Vector2(GameObject.Find($"{dotsArray[i]}").transform.position.x + Screen.width/2, GameObject.Find($"{dotsArray[i]}").transform.position.y + Screen.height * 0.8f /2 +Screen.height*0.1f), Quaternion.identity);
                     instantiatedDotText.name = $"{i+1}";
                     instantiatedDotText.text = $"{i+1}";
-                    instantiatedDotText.transform.SetParent(GameObject.Find("Canvas").transform.GetChild(1).gameObject.transform);
+                    instantiatedDotText.transform.SetParent(GameObject.Find("Canvas").transform.GetChild(2).gameObject.transform);
         }
     }
     void Update()
     {
+        
         level = LevelManagerScript.Level;
-        Debug.Log(level);
 
         clickedDotsArray = new string[level];
         clickedDots.CopyTo(clickedDotsArray);
-
+        
+        Debug.Log($"level: {level}/ coordinate: {clickedDotsArray[0]}");
         for(int i=0; i<level; i++)
         {
             if(clickedDotsArray[i]!=null && clickedDotsArray[i]!=dotsArray[i])
             {
-                Debug.Log("wrong way fella");
+                lastLine = true;
+                GameObject.Find("Canvas").transform.GetChild(1).gameObject.SetActive(true);
             }
             
             if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i])
@@ -124,25 +129,21 @@ public class Grid : MonoBehaviour
                 positionsLinesArray = new Vector2[level];
                 positionsLines.CopyTo(positionsLinesArray);
 
-                /*if (Input.touchCount == 1)
+                if (Input.touchCount == 1)
                 {
                     Touch touch = Input.GetTouch(0);
-
-                    // Update the Text on the screen depending on current position of the touch each frame
-                    m_Text.text = "Touch Position : " + touch.position;
                     Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(touch.position);
                     transform.position = position;
                     Path.PathMaker(positionsLinesArray[i], position);
                 }
                 else
                 {
-                    m_Text.text = "No touch contacts";
                     Path.PathMaker(positionsLinesArray[i], positionsLinesArray[i] );
-                }*/
+                }
 
-                Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                /*Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 transform.position = position;
-                Path.PathMaker(positionsLinesArray[i], position);
+                Path.PathMaker(positionsLinesArray[i], position);*/
             }
 
             
@@ -155,7 +156,6 @@ public class Grid : MonoBehaviour
         {
         if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i] && clickedDots.Count > 1 && i+1 < level && clickedDotsArray[i+1]!=null)
             {
-                //Debug.Log($"PositionLinesArray i{i}: {positionsLinesArray[i]}, i{i+1}: {positionsLinesArray[i+1]}");
                 if (GameObject.Find($"Line{i}") == null)
                 {
                     var pathInstantiaterInstance = Instantiate(PathInstantiaterScript, new Vector2(0,0), Quaternion.identity);
@@ -163,43 +163,55 @@ public class Grid : MonoBehaviour
                     var script = pathInstantiaterInstance.GetComponent<PathInstantiater>();//.PathInstantiaterFunction(positionsLinesArray[i], positionsLinesArray[i+1]);
                     script.Beginning = positionsLinesArray[i];
                     script.End = positionsLinesArray[i+1];
+                    if(lastLine)
+                    {
+                        Destroy(pathInstantiaterInstance);
+                    }
                 }
             }
         }
         
         if(clickedDotsArray[level-1] == dotsArray[level-1])
         {
-            LevelManagerScript.Level= LevelManagerScript.Level + 1;
-            this.gameObject.name = "PastGrid";
-            Destroy(GameObject.Find("Dots"));
-            Destroy(GameObject.Find("Canvas").transform.GetChild(1).gameObject);
-            for(int i = 0; i<level; i++)
-            {
-                Destroy(GameObject.Find($"Line{i}"));
-            }
-            Path.PathMaker(new Vector2(0,0), new Vector2(0,0));
-            Destroy(gameObject);
+            level++;
+            GridReloader(level);
+        }
+
+        if(LevelManagerScript.RestartVariable)
+        {
+            LevelManagerScript.RestartVariable = false;
+            level=1;
+            GridReloader(level);
         }
     }
 
     private int ListRandomizer()
     {
-        List<int> address;
-        var random = new System.Random();
+        int address;
         if(level >10)
         {
-            address = new List<int>{ 0,1,2,3,4,5,6,7,8,9 };
+            address = UnityEngine.Random.Range( 0,10 );
         }
         else
         {
-            address = new List<int>{ 2,3,4,5,6,7 };
+            address = UnityEngine.Random.Range( 2,8 );
         }
+        return address;
+    }
 
-        int[] randomInt = new int[level];
-        randomInt = address.ToArray(); //.CopyTo(randomInt);
-
-        int index = random.Next(address.Count);
-        return randomInt[index];
+    public void GridReloader(int level)
+    {
+        LevelManagerScript.Level= level;
+        this.gameObject.name = "PastGrid";
+        Destroy(GameObject.Find("Dots"));
+        Destroy(GameObject.Find("Canvas").transform.GetChild(2).gameObject);
+        for(int i = 0; i<level; i++)
+        {
+            Destroy(GameObject.Find($"Line{i}"));
+        }
+        Path.PathMaker(new Vector2(0,0), new Vector2(0,0));
+        GameObject.Find("Canvas").transform.GetChild(1).gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     IEnumerator Fade() 

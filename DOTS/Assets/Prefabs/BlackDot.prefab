@@ -99,7 +99,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.75
+  m_Radius: 0.8
 --- !u!114 &1928710506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,5 +114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Grid: {fileID: 0}
   GridScript: {fileID: 0}
+  CanvasObject: {fileID: 0}
   Ray: {fileID: 0}
   RayOrigin: {fileID: 0}

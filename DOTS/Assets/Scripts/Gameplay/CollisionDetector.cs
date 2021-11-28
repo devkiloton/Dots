@@ -34,7 +34,7 @@ public class CollisionDetector : MonoBehaviour
         //Debug.Log($"{this.name}");
         GridScript.clickedDots.Add(this.name);
         RayOrigin.PositionCollision = thisTransform;
-        var CanvasObjectChild = CanvasObject.transform.GetChild(2).gameObject;
+        var CanvasObjectChild = CanvasObject.transform.GetChild(4).gameObject;
         CanvasObjectChild.SetActive(false);
     }
 }

@@ -10,6 +10,10 @@ public class LevelManager : MonoBehaviour
 
     public bool RestartVariable = false;
 
+    public bool ContinueVariable = false;
+
+    public bool NextLevelVariable = false;
+
     private GameObject instantiatedObject;
 
     public Text LevelText;
@@ -34,5 +38,15 @@ public class LevelManager : MonoBehaviour
     public void Restart()
     {
         RestartVariable = true;
+    }
+
+    public void Continue()
+    {
+        ContinueVariable = true;
+    }
+
+    public void NextLevel()
+    {
+        NextLevelVariable = true;
     }
 }

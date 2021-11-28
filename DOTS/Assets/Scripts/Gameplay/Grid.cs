@@ -32,11 +32,16 @@ public class Grid : MonoBehaviour
 
     private bool lastLine = false;
 
+    private int lastLineIndex;
+
     private int level;
     private int matriceLine = 0;
     private int matriceColumn = 0;
     private int line = 4;
     private int column = 4;
+
+    private float time = 3;
+    private float timeSinceBeginning;
 
     void Start()
     {
@@ -62,7 +67,6 @@ public class Grid : MonoBehaviour
         {
             line = ListRandomizer();
             column = ListRandomizer();
-            Debug.Log($"Creating coordinate: Level{level} Line{line} column{column}");
             if (givenDots[line, column] != 1)
             {
                 givenDots[line, column] = 1;
@@ -74,7 +78,6 @@ public class Grid : MonoBehaviour
             }
         }
 
-        //for()
         var EmptyObj2 = new GameObject();
         var instantiatedDotEmpty2 = Instantiate(EmptyObj2, new Vector2(0,0), Quaternion.identity);
         instantiatedDotEmpty2.name = "Dots";
@@ -85,7 +88,6 @@ public class Grid : MonoBehaviour
             {
                 if (givenDots[matriceLine, matriceColumn] == 1)
                 {
-                    Debug.Log($" instantiate: Level{level} Line{i} column{j}");
                     var instantiatedObject = Instantiate(Dot, new Vector2(xDistanceBetweenDots * i - (float)Screen.width / 2, yDistanceBetweenDots * j - (float)Screen.height * 0.8f / 2), Quaternion.identity);
                     instantiatedObject.name = $"{matriceLine},{matriceColumn}";
                     instantiatedObject.transform.SetParent(GameObject.Find("Dots").transform);
@@ -102,7 +104,7 @@ public class Grid : MonoBehaviour
             var instantiatedDotText = Instantiate(dotNumberText, new Vector2(GameObject.Find($"{dotsArray[i]}").transform.position.x + Screen.width/2, GameObject.Find($"{dotsArray[i]}").transform.position.y + Screen.height * 0.8f /2 +Screen.height*0.1f), Quaternion.identity);
                     instantiatedDotText.name = $"{i+1}";
                     instantiatedDotText.text = $"{i+1}";
-                    instantiatedDotText.transform.SetParent(GameObject.Find("Canvas").transform.GetChild(2).gameObject.transform);
+                    instantiatedDotText.transform.SetParent(GameObject.Find("Canvas").transform.GetChild(4).gameObject.transform);
         }
     }
     void Update()
@@ -112,14 +114,18 @@ public class Grid : MonoBehaviour
 
         clickedDotsArray = new string[level];
         clickedDots.CopyTo(clickedDotsArray);
-        
-        Debug.Log($"level: {level}/ coordinate: {clickedDotsArray[0]}");
         for(int i=0; i<level; i++)
         {
             if(clickedDotsArray[i]!=null && clickedDotsArray[i]!=dotsArray[i])
             {
                 lastLine = true;
+                lastLineIndex = i;
                 GameObject.Find("Canvas").transform.GetChild(1).gameObject.SetActive(true);
+
+                if(LevelManagerScript.ContinueVariable)
+                {
+                    ContinueGame(lastLineIndex);
+                }
             }
             
             if(clickedDotsArray[i]!=null && clickedDotsArray[i]==dotsArray[i])
@@ -129,7 +135,7 @@ public class Grid : MonoBehaviour
                 positionsLinesArray = new Vector2[level];
                 positionsLines.CopyTo(positionsLinesArray);
 
-                if (Input.touchCount == 1)
+                /*if (Input.touchCount == 1)
                 {
                     Touch touch = Input.GetTouch(0);
                     Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(touch.position);
@@ -139,11 +145,11 @@ public class Grid : MonoBehaviour
                 else
                 {
                     Path.PathMaker(positionsLinesArray[i], positionsLinesArray[i] );
-                }
+                }*/
 
-                /*Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 transform.position = position;
-                Path.PathMaker(positionsLinesArray[i], position);*/
+                Path.PathMaker(positionsLinesArray[i], position);
             }
 
             
@@ -160,7 +166,7 @@ public class Grid : MonoBehaviour
                 {
                     var pathInstantiaterInstance = Instantiate(PathInstantiaterScript, new Vector2(0,0), Quaternion.identity);
                     pathInstantiaterInstance.name = $"Line{i}";
-                    var script = pathInstantiaterInstance.GetComponent<PathInstantiater>();//.PathInstantiaterFunction(positionsLinesArray[i], positionsLinesArray[i+1]);
+                    var script = pathInstantiaterInstance.GetComponent<PathInstantiater>(); //.PathInstantiaterFunction(positionsLinesArray[i], positionsLinesArray[i+1]);
                     script.Beginning = positionsLinesArray[i];
                     script.End = positionsLinesArray[i+1];
                     if(lastLine)
@@ -173,8 +179,7 @@ public class Grid : MonoBehaviour
         
         if(clickedDotsArray[level-1] == dotsArray[level-1])
         {
-            level++;
-            GridReloader(level);
+            StartCoroutine(Fade());
         }
 
         if(LevelManagerScript.RestartVariable)
@@ -204,7 +209,7 @@ public class Grid : MonoBehaviour
         LevelManagerScript.Level= level;
         this.gameObject.name = "PastGrid";
         Destroy(GameObject.Find("Dots"));
-        Destroy(GameObject.Find("Canvas").transform.GetChild(2).gameObject);
+        Destroy(GameObject.Find("Canvas").transform.GetChild(4).gameObject);
         for(int i = 0; i<level; i++)
         {
             Destroy(GameObject.Find($"Line{i}"));
@@ -214,8 +219,43 @@ public class Grid : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void ContinueGame(int indexArray)
+    {
+        LevelManagerScript.ContinueVariable = false;
+        lastLine = false;
+        if(clickedDots.Contains(clickedDotsArray[indexArray]))
+        {
+            clickedDots.Remove(clickedDotsArray[indexArray]);
+        }
+        clickedDotsArray[indexArray] = null;
+        GameObject.Find("Canvas").transform.GetChild(1).gameObject.SetActive(false);
+    }
+
     IEnumerator Fade() 
     {
-        yield return new WaitForSeconds(.4f);
+
+        GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(true);
+        
+        timeSinceBeginning += Time.deltaTime;
+        GameObject.Find("Canvas").transform.GetChild(2).transform.GetChild(0).transform.GetChild(2).gameObject.GetComponent<Text>().text = $"{(int)(time - timeSinceBeginning + 1)}";
+        if(LevelManagerScript.NextLevelVariable)
+        {
+            LevelManagerScript.NextLevelVariable = false;
+            yield return new WaitForSeconds(0.1f);
+            StartNextLevel();
+        }
+        else
+        {
+            yield return new WaitForSeconds(3);
+            StartNextLevel();
+        }
+        
+    }
+
+    public void StartNextLevel()
+    {
+        GameObject.Find("Canvas").transform.GetChild(2).gameObject.SetActive(false);
+        level++;
+        GridReloader(level);
     }
 }
